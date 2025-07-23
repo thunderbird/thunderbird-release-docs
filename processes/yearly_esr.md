@@ -78,26 +78,38 @@ Non-exhaustive list of special cases:
 
 **Performing merge to new tree**
 
-This section is _**not yet complete**_
+This section is <ins>**not yet complete**</ins>
 
-1. Perform graft from `comm-beta` to new ESR tree
+1.  Clone new ESR repo
+   
+    <pre>hg clone comm-esr<i>[new ESR ver. #]</i> .</pre>
+
+2.  Pull `comm-beta`
+   
+    <pre>hg pull comm-beta</pre>
+
+3.  Perform graft from `comm-beta` to new ESR tree
    	* For example, to graft `comm-beta` into `comm-esr140`:
 	   
       <pre>hg graft --tool internal:other <i>[child rev of BETA_139_END]</i>:<i>[child rev of RELEASE_140_BASE]</i></pre>
 
-2. Merge appropriate changeset range from comm-beta using `hg debugsetparents`
+4.  Merge appropriate changeset range from comm-beta using `hg debugsetparents`
    
-   <pre>hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i></pre>
+    <pre>hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i></pre>
 
-3. Commit merge
+5.  Commit merge
 
-   <pre>hg commit -m "Merge old head via |hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i>| a=release CLOSED TREE DONTBUILD"</pre>
+    <pre>hg commit -m "Merge old head via |hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i>| a=release CLOSED TREE DONTBUILD"</pre>
 
-4. Merge over old tags from comm-beta after using `hg debugsetparents`
+6.  Merge over old tags from `comm-beta` after using `hg debugsetparents`
 
-5. Verify that changeset hashes grafted into new ESR tree match those of `comm-beta`
+7.  Verify that changeset hashes grafted into new ESR tree match those of `comm-beta`
 
-6. Push changes
+8.  Pin to latest tag and revision of upstream ESR
+
+9.  Push changes
+
+10. Run `release-to-esr` merge-automation
 
 TODO
 
