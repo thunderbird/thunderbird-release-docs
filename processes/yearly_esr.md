@@ -85,7 +85,7 @@ This section is _**not yet complete**_
 	   
       <pre>hg graft --tool internal:other <i>[child rev of BETA_139_END]</i>:<i>[child rev of RELEASE_140_BASE]</i></pre>
 
-2. Merge appropriate changeset range from comm-release using `hg debugsetparents`
+2. Merge appropriate changeset range from comm-beta using `hg debugsetparents`
    
    <pre>hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i></pre>
 
@@ -93,7 +93,7 @@ This section is _**not yet complete**_
 
    <pre>hg commit -m "Merge old head via |hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i>| a=release CLOSED TREE DONTBUILD"</pre>
 
-4. Merge over old tags from comm-release after using `hg debugsetparents`
+4. Merge over old tags from comm-beta after using `hg debugsetparents`
 
 5. Verify that changeset hashes grafted into new ESR tree match those of `comm-beta`
 
@@ -108,13 +108,15 @@ When the new ESR tree is created, the previous ESR's tree needs to be updated in
 1. Update `release-bouncer-aliases` to match new ESR tree
 2. Remove previous ESR from `run-on-releases` in `release-update-verify-next` and `release-update-verify-next`
 
-**Updating scriptworker scripts**
-
-TODO
-
 **Verify results**
 
-TODO
+* Build
+	1. Check that branding is correct
+* Promote
+	1. Check that all files are present in new ESR's `candidates` folder on FTP
+	2. Make sure all langpacks were pushed to FTP as well
+* Ship
+	1. Check that thunderbird.net ESR download link downloads new ESR
 
 **Troubleshooting common problems**
 
@@ -124,6 +126,8 @@ TODO
 * Issues with `release-update-verify` or `release-update-verify-next` tasks
 	1. Double-check `esr-localtest` Balrog rules
 	2. Make sure `last_watershed` version is correct in `release-update-verify-config` and `release-update-verify-config-next` tasks
+* Chain-of-trust errors
+	1. Check values in `python/mozbuild/mozbuild/configure/constants.py`
 
 
 
