@@ -1,10 +1,33 @@
-**Setting up yearly ESR**
+# Setting up yearly ESR
 
 This is a *very* involved process with about a million things that can go wrong, so it's a safe assumption that this guide will be incomplete in places and may contain errors.
 
 "Self-documenting" steps of the process, such as enablement bugs that can be completed easily using previous years' patches as a near-1:1 reference, are not given detailed steps in this guide.
 
-**Setting up meta bug**
+# High-level timeline
+
+## Two months out
+1. Create meta bug and dependent enablement bugs
+2. Create new ESR repository
+3. Complete any other enablement bugs that are not mutually exclusive to a single ESR (e.g. can be completed without impacting previous ESR)
+
+## One month out, *before* `comm-central -> comm-beta` merge
+1. Update Balrog rules
+2. Update Thunderbird taskgraph on `comm-central` to support new ESR
+3. Update previous ESR tree
+	* At least one new version of the previous ESR must be released after updating aliases and before the first release of new ESR; otherwise, bouncer tasks will fail on the new ESR
+
+## One week out, *after* `comm-central -> comm-beta` merge
+1. Merge `comm-beta` to new ESR repository
+2. Attempt build and promotion
+	* It is ***highly unlikely*** that this first build will go smoothly; see troubleshooting section at the end of this guide for help with common issues
+
+## Day of
+1. Build, promote, push, and ship
+2. Verify that files are available on FTP
+3. Verify that `thunderbird.net` download link works
+
+# Setting up meta bug
 
 1. Create a clone of previous year's meta bug (e.g. bug 1970846)
 2. Add Firefox's new ESR meta bug as a dependent bug
@@ -15,33 +38,38 @@ This is a *very* involved process with about a million things that can go wrong,
 	* Create new ESR repository (e.g. bug 1971482)
 	* Support new ESR in fxci-config (e.g. bug 1972938)
 
-**Creating Balrog rules**
+# Creating Balrog rules
 
 Rule updates for `esr` channel should be performed on Balrog staging *and* production.
 
-1. For `esr` channel, create duplicate of bottommost rule:
-	* Set background rate to zero
-	* Decrease priority by 5
-	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-	* Update alias to new ESR version (e.g. `thunderbird-esr128` to `thunderbird-esr140`)
-2. For `esr-cdntest` channel, create duplicate of bottommost rule:
-	* Set background rate to 100
-	* Decrease priority by 5
-	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-	* Update alias to new ESR version (e.g. `thunderbird-esr128-cdntest` to `thunderbird-esr140-cdntest`)
-	* Update channel of previous bottommost rule from `esr-cdntest*` to `esr-cdntest`
-3. For `esr-localtest` channel, create duplicate of bottommost rule:
-	* Set background rate to 100
-	* Decrease priority by 5
-	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-	* Update alias to new ESR version (e.g. `thunderbird-esr128-localtest` to `thunderbird-esr140-localtest`)
-	* Update channel of previous bottommost rule from `esr-localtest*` to `esr-localtest`
+## `esr` channel
+1. Create duplicate of bottommost rule
+2. Set background rate to zero
+3. Decrease priority by 5
+4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+5. Update alias to new ESR version (e.g. `thunderbird-esr128` to `thunderbird-esr140`)
 
-**Updating Thunderbird taskgraph**
+## `esr-cdntest` channel
+1. Create duplicate of bottommost rule
+2. Set background rate to 100
+3. Decrease priority by 5
+4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+5. Update alias to new ESR version (e.g. `thunderbird-esr128-cdntest` to `thunderbird-esr140-cdntest`)
+6. Update channel of previous bottommost rule from `esr-cdntest*` to `esr-cdntest`
+
+## `esr-localtest` channel
+1. Create duplicate of bottommost rule
+2. Set background rate to 100
+3. Decrease priority by 5
+4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+5. Update alias to new ESR version (e.g. `thunderbird-esr128-localtest` to `thunderbird-esr140-localtest`)
+6. Update channel of previous bottommost rule from `esr-localtest*` to `esr-localtest`
+
+# Updating Thunderbird taskgraph
 	
-Search all files in taskcluster/ folder for references to previous ESR, such as the string `esr128`, and update them to new ESR.
+Search all files in `taskcluster/` folder for references to previous ESR, such as the string `esr128`, and update them to new ESR.
 
-Non-exhaustive list of special cases:
+## Non-exhaustive list of special cases
 
 * `taskcluster/comm_taskgraph/transforms/update_verify_config.py`
 	* Update `esr*-next` in `INCLUDE_VERSION_REGEXES` with new ESR version number (e.g. `esr128-next` to `esr140-next`)
@@ -76,9 +104,16 @@ Non-exhaustive list of special cases:
 	* Update `last_watershed` to most recent version of previous ESR
 		* `release-update-verify` and `release-update-verify-next` tasks will only test versions greater than or equal to `last_watershed`
 
-**Performing merge to new tree**
+## Updating previous ESR taskgraph
 
-This section is <ins>**not yet complete**</ins>
+When the new ESR tree is created, the previous ESR's tree needs to be updated in a few ways to make sure that certain tasks no longer run.
+
+1. Update `release-bouncer-aliases` to match new ESR tree
+2. Remove previous ESR from `run-on-releases` in `release-update-verify-next` and `release-update-verify-next`
+
+# Performing merge to new tree
+
+This section is <ins>**not yet complete and needs more detail**</ins>
 
 1.  Clone new ESR repo
    
@@ -111,16 +146,7 @@ This section is <ins>**not yet complete**</ins>
 
 10. Run `release-to-esr` merge-automation
 
-TODO
-
-**Updating previous ESR taskgraph**
-
-When the new ESR tree is created, the previous ESR's tree needs to be updated in a few ways to make sure that certain tasks no longer run.
-
-1. Update `release-bouncer-aliases` to match new ESR tree
-2. Remove previous ESR from `run-on-releases` in `release-update-verify-next` and `release-update-verify-next`
-
-**Verify results**
+# Verify results
 
 * Build
 	1. Check that branding is correct
@@ -128,9 +154,9 @@ When the new ESR tree is created, the previous ESR's tree needs to be updated in
 	1. Check that all files are present in new ESR's `candidates` folder on FTP
 	2. Make sure all langpacks were pushed to FTP as well
 * Ship
-	1. Check that thunderbird.net ESR download link downloads new ESR
+	1. Check that `thunderbird.net` ESR download link downloads new ESR
 
-**Troubleshooting common problems**
+# Troubleshooting common problems
 
 * Can't push to newly-created ESR repo
 	1. Delete and re-clone the repo
