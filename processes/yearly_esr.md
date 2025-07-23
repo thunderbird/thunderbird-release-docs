@@ -1,0 +1,169 @@
+**Setting up yearly ESR**
+
+This is a *very* involved process with about a million things that can go wrong, so it's a safe assumption that this guide will be incomplete in places and may contain errors.
+
+"Self-documenting" steps of the process, such as enablement bugs that can be completed easily using previous years' patches as a near-1:1 reference, are not given detailed steps in this guide.
+
+**Setting up meta bug**
+
+1. Create a clone of previous year's meta bug (e.g. bug 1970846)
+2. Add Firefox's new ESR meta bug as a dependent bug
+3. Add each dependent bug from Firefox's meta bug that also accounts for Thunderbird's new ESR as well
+4. For Firefox enablement bugs that don't account for Thunderbird, create clones of enablement bugs from previous year, such as (but not limited to):
+	* Update Thunderbird taskgraph to support new ESR (e.g. bug 1972500)
+	* Add new ESR to Searchfox (e.g. bug 1970809)
+	* Create new ESR repository (e.g. bug 1971482)
+	* Support new ESR in fxci-config (e.g. bug 1972938)
+
+**Creating Balrog rules**
+
+Rule updates for `esr` channel should be performed on Balrog staging *and* production.
+
+1. For `esr` channel, create duplicate of bottommost rule:
+	* Set background rate to zero
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128` to `thunderbird-esr140`)
+2. For `esr-cdntest` channel, create duplicate of bottommost rule:
+	* Set background rate to 100
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128-cdntest` to `thunderbird-esr140-cdntest`)
+	* Update channel of previous bottommost rule from `esr-cdntest*` to `esr-cdntest`
+3. For `esr-localtest` channel, create duplicate of bottommost rule:
+	* Set background rate to 100
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128-localtest` to `thunderbird-esr140-localtest`)
+	* Update channel of previous bottommost rule from `esr-localtest*` to `esr-localtest`
+
+**Updating Thunderbird taskgraph**
+	
+Search all files in taskcluster/ folder for references to previous ESR, such as the string `esr128`, and update them to new ESR.
+
+Non-exhaustive list of special cases:
+
+* `taskcluster/comm_taskgraph/transforms/update_verify_config.py`
+	* Update `esr*-next` in `INCLUDE_VERSION_REGEXES` with new ESR version number (e.g. `esr128-next` to `esr140-next`)
+	* Update `esr*-next` regex with new version number
+* `taskcluster/kinds/merge-automation/kind.yml`
+	* Update `upstream` of `release-to-esr` to new Firefox ESR upstream
+* `taskcluster/kinds/release-bouncer-aliases/kind.yml`
+	* Assign the following aliases to previous ESR:
+
+	  ```yaml
+	  thunderbird-esr-latest-ssl: installer-ssl
+      thunderbird-esr-latest: installer
+      thunderbird-esr-msi-latest-ssl: msi
+      thunderbird-esr-msix-latest-ssl: msix
+	  ```
+	* Assign the following aliases to new ESR:
+	
+	  ```yaml
+      thunderbird-esr-next-latest-ssl: installer-ssl
+      thunderbird-esr-next-latest: installer
+      thunderbird-esr-next-msi-latest-ssl: msi
+      thunderbird-esr-next-msix-latest-ssl: msix
+	  ```
+* `taskcluster/kinds/release-balrog-scheduling/kind.yml`
+	* Update `esr*` rule IDs (e.g. rule number of alias `thunderbird-esr140` from Balrog staging and production, as appropriate)
+* `taskcluster/kinds/release-flatpak-push/kind.yml`
+	* Remove ESR from `run-on-releases`, as the new ESR should not be pushed to Flathub until the Balrog update rate has reached 100
+* `taskcluster/kinds/release-msix-push/kind.yml`
+	* Remove ESR from `run-on-releases`, as the new ESR should not be pushed to the Microsoft Store until the Balrog update rate has reached 100
+* `taskcluster/kinds/release-update-verify-config/kind.yml`
+  `taskcluster/kinds/release-update-verify-config-next/kind.yml`
+	* Update `last_watershed` to most recent version of previous ESR
+		* `release-update-verify` and `release-update-verify-next` tasks will only test versions greater than or equal to `last_watershed`
+
+**Performing merge to new tree**
+
+This section is _**not yet complete**_
+
+1. Perform graft from `comm-beta` to new ESR tree
+   	* For example, to graft `comm-beta` into `comm-esr140`:
+	   
+      <pre>hg graft --tool internal:other <i>[child rev of BETA_139_END]</i>:<i>[child rev of RELEASE_140_BASE]</i></pre>
+
+2. Merge appropriate changeset range from comm-release using `hg debugsetparents`
+   
+   <pre>hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i></pre>
+
+3. Commit merge
+
+   <pre>hg commit -m "Merge old head via |hg debugsetparents <i>[merge tip of source repo] [tip rev of dest. repo from before merge]</i>| a=release CLOSED TREE DONTBUILD"</pre>
+
+4. Merge over old tags from comm-release after using `hg debugsetparents`
+
+5. Verify that changeset hashes grafted into new ESR tree match those of `comm-beta`
+
+6. Push changes
+
+TODO
+
+**Updating previous ESR taskgraph**
+
+When the new ESR tree is created, the previous ESR's tree needs to be updated in a few ways to make sure that certain tasks no longer run.
+
+1. Update `release-bouncer-aliases` to match new ESR tree
+2. Remove previous ESR from `run-on-releases` in `release-update-verify-next` and `release-update-verify-next`
+
+**Updating scriptworker scripts**
+
+TODO
+
+**Verify results**
+
+TODO
+
+**Troubleshooting common problems**
+
+* Can't push to newly-created ESR repo
+	1. Delete and re-clone the repo
+	2. Re-run `mach bootstrap`
+* Issues with `release-update-verify` or `release-update-verify-next` tasks
+	1. Double-check `esr-localtest` Balrog rules
+	2. Make sure `last_watershed` version is correct in `release-update-verify-config` and `release-update-verify-config-next` tasks
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
