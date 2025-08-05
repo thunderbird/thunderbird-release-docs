@@ -12,7 +12,7 @@ This is a *very* involved process with about a million things that can go wrong,
 3. Complete any other enablement bugs that are not mutually exclusive to a single ESR (e.g. can be completed without impacting previous ESR)
 
 ### One month out, *before* `comm-central -> comm-beta` merge
-1. Update Balrog rules
+1. Setup initial Balrog rules
 2. Update Thunderbird taskgraph on `comm-central` to support new ESR
 3. Update previous ESR tree
 	* At least one new version of the previous ESR must be released after updating aliases and before the first release of new ESR; otherwise, bouncer tasks will fail on the new ESR
@@ -26,6 +26,7 @@ This is a *very* involved process with about a million things that can go wrong,
 1. Build, promote, push, and ship
 2. Verify that files are available on FTP
 3. Verify that `thunderbird.net` download link works
+4. Setup final Balrog rules to allow updating from old ESR
 
 ## Setting up meta bug
 
@@ -38,32 +39,48 @@ This is a *very* involved process with about a million things that can go wrong,
 	* Create new ESR repository (e.g. bug 1971482)
 	* Support new ESR in fxci-config (e.g. bug 1972938)
 
-## Creating Balrog rules
+## Setup Initial Balrog rules
 
 Rule updates for `esr` channel should be performed on Balrog staging *and* production.
 
 ### `esr` channel
-1. Create duplicate of bottommost rule
-2. Set background rate to zero
-3. Decrease priority by 5
-4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-5. Update alias to new ESR version (e.g. `thunderbird-esr128` to `thunderbird-esr140`)
+1. Update version cutoff for current ESR to be less than the current ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
+	* This prevents updating beyond the current ESR for the time being
+2. Create new ESR rule by duplicating the current ESR rule (should be the bottommost rule) and making the following updates:
+	* Set Mapping and Fallback Mapping accordingly (new and current ESR, respectively)
+	* Set background rate to zero
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 140, set it to `<141.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128` to `thunderbird-esr140`)
 
 ### `esr-cdntest` channel
-1. Create duplicate of bottommost rule
-2. Set background rate to 100
-3. Decrease priority by 5
-4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-5. Update alias to new ESR version (e.g. `thunderbird-esr128-cdntest` to `thunderbird-esr140-cdntest`)
-6. Update channel of previous bottommost rule from `esr-cdntest*` to `esr-cdntest`
+1. Update version cutoff for current ESR to be less than or equal to the current ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<=128.12.0`)
+2. Create new ESR rule by duplicating the current ESR rule (should be the bottommost rule) and making the following updates:
+	* Set Mapping and Fallback Mapping accordingly (new and current ESR, respectively)
+	* Set background rate to 100
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 140, set it to `<141.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128-cdntest` to `thunderbird-esr140-cdntest`)
+	* Update channel of current ESR rule from `esr-cdntest*` to `esr-cdntest`
 
 ### `esr-localtest` channel
-1. Create duplicate of bottommost rule
-2. Set background rate to 100
-3. Decrease priority by 5
-4. Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 128, set it to `<129.0`)
-5. Update alias to new ESR version (e.g. `thunderbird-esr128-localtest` to `thunderbird-esr140-localtest`)
-6. Update channel of previous bottommost rule from `esr-localtest*` to `esr-localtest`
+1. Update version cutoff for current ESR to be less than or equal to the current ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<=128.12.0`)
+2. Create new ESR rule by duplicating the current ESR rule (should be the bottommost rule) and making the following updates:
+	* Set Mapping and Fallback Mapping accordingly (new and current ESR, respectively)
+	* Set background rate to 100
+	* Decrease priority by 5
+	* Update version cutoff to be less than the new ESR version plus one (e.g. for ESR 140, set it to `<141.0`)
+	* Update alias to new ESR version (e.g. `thunderbird-esr128-localtest` to `thunderbird-esr140-localtest`)
+	* Update channel of current ESR rule from `esr-localtest*` to `esr-localtest`
+
+## Setup Final Balrog rules
+
+Final Balrog updates are made on release day. Rule updates for `esr` channel should be performed on Balrog staging *and* production.
+
+### `esr` channel
+1. Update version cutoff for current ESR to be less than or equal to the current ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<=128.12.0`)
+	* This allows current ESR users to update to the new ESR
+2. Set background rate to pre-determined rate
 
 ## Updating Thunderbird taskgraph
 	
@@ -101,7 +118,8 @@ Search all files in `taskcluster/` folder for references to previous ESR, such a
 	* Remove ESR from `run-on-releases`, as the new ESR should not be pushed to the Microsoft Store until the Balrog update rate has reached 100
 * `taskcluster/kinds/release-update-verify-config/kind.yml`
   `taskcluster/kinds/release-update-verify-config-next/kind.yml`
-	* Update `last_watershed` to most recent version of previous ESR
+	* Update `last_watershed` to their base versions, respectively:
+		* e.g. esr128: "128.0esr" and esr140: "140.0esr"
 		* `release-update-verify` and `release-update-verify-next` tasks will only test versions greater than or equal to `last_watershed`
 
 ### Updating previous ESR taskgraph
@@ -166,46 +184,3 @@ This section is <ins>**not yet complete and needs more detail**</ins>
 	2. Make sure `last_watershed` version is correct in `release-update-verify-config` and `release-update-verify-config-next` tasks
 * Chain-of-trust errors
 	1. Check values in `python/mozbuild/mozbuild/configure/constants.py`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
