@@ -60,6 +60,29 @@
 
 6. If everything is in order, rerun the previous custom push action, but with `force-dry-run` set to "false"
 
+7. Reply to your previous email using the template below:
+
+   > Merges are finished.
+   > 
+   > Thunderbird ***VER*** will be built once the Firefox build has been tagged in Mercurial.
+   > 
+   > comm-release:
+   > 
+   > * ***TREEHERDER LINK TO TIP***
+   > 
+   > comm-beta:
+   > 
+   > * ***TREEHERDER LINK TO TIP***
+   > 
+   > documentation:
+   > 
+   > * No changes
+   > 
+   > current tree status:
+   > 
+   > * comm-release: APPROVAL REQUIRED
+   > * comm-beta: CLOSED
+
 *Upon a successful run, `comm-beta` should get a version bump, branding changes, and two new tags:*
 
 * *BETA\_**[PREVIOUS VERSION]**\_END*
