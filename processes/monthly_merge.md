@@ -14,18 +14,18 @@
 
 ## `comm-beta` -> `comm-release` merge
 
-1. Email thunderbird-drivers that the merge is beginning using the template below, making sure to replace the red placeholders appropriately:
+1. Email thunderbird-drivers that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
 
    ### Subject
-   > Thunderbird beta merge & version bumps for Tue Sep <span style="color:red;">MM</span> <span style="color:red;">YYYY</span> (c-c -> <span style="color:red;">VER</span> / c-b -> <span style="color:red;">VER</span>)
+   > Thunderbird beta merge & version bumps for Tue Sep ***MM*** ***YYYY*** (c-c -> ***VER*** / c-b -> ***VER***)
 
    ### Body
    > Hello!
    >
    > I'll be completing the Thunderbird beta merge today. The Firefox merges have not completed.
    >
-   >   comm-beta to <span style="color:red;">VER</span>
-   >   comm-release to <span style="color:red;">VER</span>
+   >   comm-beta to ***VER***
+   >   comm-release to ***VER***
    >
    > The merge will be performed via automation.
    >
