@@ -63,23 +63,23 @@
 7. Reply to your previous email using the template below:
 
    > Merges are finished.
-   > 
+   >
    > Thunderbird ***VER*** will be built once the Firefox build has been tagged in Mercurial.
-   > 
+   >
    > comm-release:
-   > 
+   >
    > * ***TREEHERDER LINK TO TIP***
-   > 
+   >
    > comm-beta:
-   > 
+   >
    > * ***TREEHERDER LINK TO TIP***
-   > 
-   > documentation:
-   > 
+   >
+   > Documentation:
+   >
    > * No changes
-   > 
-   > current tree status:
-   > 
+   >
+   > Current tree status:
+   >
    > * comm-release: APPROVAL REQUIRED
    > * comm-beta: CLOSED
 
