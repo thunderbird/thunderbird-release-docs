@@ -63,6 +63,7 @@ deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports noble-security main restri
 ```
 
 **Install prerequisite packages:**
+Note: Not all of these are needed. If you have the time, please try trimming to the minimum required.
 ```
 sudo apt update && sudo apt install -y \
   mercurial build-essential cbindgen ccache clang clang-tools curl git htop libclang-dev lld llvm-dev \
