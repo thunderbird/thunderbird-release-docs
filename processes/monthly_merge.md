@@ -104,8 +104,8 @@
    >
    > comm-central:
    >
-   > * ***TREEHERDER LINK TO VERSION BUMP PUSH REVISION***
-   > * ***TREEHERDER LINK TO MERGE PUSH REVISION***
+   > * ***TREEHERDER LINK TO VERSION BUMP REVISION***
+   > * ***TREEHERDER LINK TO MERGE REVISION***
    >
    > comm-beta:
    >
