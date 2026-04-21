@@ -13,6 +13,8 @@ Example usage:
 node check_lang.mjs --version 150.0 --default-only
 ```
 
+Note: Running this script after re-pushing langpacks seems to hit a caching issue where the old version continues to be displayed, however checking the website shows the updated langpack version.
+
 ### Checking ATN Directly
 
 You can also check [ATN](https://addons.thunderbird.net/en-US/thunderbird/addon/tb-langpack-be/versions/) directly to verify whether a langpack is up-to-date.
