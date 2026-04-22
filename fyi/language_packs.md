@@ -5,7 +5,8 @@
 ### Script (by John Bieling)
 
 A script is available to check langpacks for a specific version:
-https://gist.github.com/jobisoft/7a11996e4b374242d4f65d871957a70e
+https://gist.github.com/coreycb/8a983c113d0808de032af79ead8b3ef8
+(forked from John's gist with cache fix)
 
 Example usage:
 
