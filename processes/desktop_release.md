@@ -1,15 +1,15 @@
 Uplifts prepared -- (Corey)
 
-Build day before:
+Build day before: 
 - Check out comm-beta or update to tip
 ```
-hg pull comm-beta
+hg pull <comm repo>
 hg up tip
 ```
 - Pin to Firefox
 
 ```
-pin_for_release.py mozilla-beta
+pin_for_release.py <mozilla repo>
 ```
 
 - Check For rust vendoring
@@ -34,14 +34,14 @@ graft_uplift.sh coreycb <commit hash from c-c>
 - Verify recent additions
 
 ```
-hg out -r . comm-beta
+hg out -r . <comm repo>
 ```
 
 
-- Push those changes to comm-beta
+- Push those changes to the appropriate comm repo
 
 ```
-hg push -r . comm-beta
+hg push -r . <comm repo>
 ```
 
 - Follow up using Bugherder (must use full [https://hg.mozilla](https://hg.mozilla) URL)
