@@ -128,25 +128,24 @@
 1. Email thunderbird-drivers mailing list that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
 
    ### Subject
-   > Thunderbird comm-beta -> comm-release merge & version bumps for Tue Sep ***MM*** ***YYYY*** (c-b -> ***VER*** / c-r -> ***VER***)
+   > Thunderbird comm-beta -> comm-release merge & version bump for Tue Sep ***MM*** ***YYYY*** ( c-r -> ***VER***)
 
    ### Body
    > Hello!
    >
    > I'll be completing the Thunderbird comm-beta -> comm-release merge today. The Firefox merges have not completed.
    >
-   >   comm-beta to ***VER***
-   >   comm-release to ***VER***
+   >   - comm-release to ***VER***
    >
    > The merge will be performed via automation.
    >
    > I’ll keep people up to date by replying to this email:
    >
-   >   Email before merge begins
-   >   Close the trees
-   >   Perform the merge
-   >   Email after the merge
-   >   comm-beta will remain closed until next week's comm-central -> comm-beta merge
+   >   - Email before merge begins
+   >   - Close the trees
+   >   - Perform the merge
+   >   - Email after the merge
+   >   - comm-beta will remain closed until next week's comm-central -> comm-beta merge
    >
    > Please let me know if you have any questions or comments.
    >
