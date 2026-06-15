@@ -37,11 +37,11 @@
    >
    > I’ll keep people up to date by replying to this email:
    >
-   >   Email before merge begins
-   >   Close the trees
-   >   Perform the merge
-   >   Email after the merge
-   >   Re-open comm-central, set comm-beta to approval needed
+   >   - Email before merge begins
+   >   - Close the trees
+   >   - Perform the merge
+   >   - Email after the merge
+   >   - Re-open comm-central, set comm-beta to approval needed
    >
    > Please let me know if you have any questions or comments.
    >
