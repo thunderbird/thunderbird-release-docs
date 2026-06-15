@@ -20,7 +20,7 @@
 
 ## `comm-central` -> `comm-beta` merge
 
-1. Email thunderbird-drivers and sheriffs mailing lists that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
+1. Email `thunderbird-drivers` that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
 
    ### Subject
    > Thunderbird comm-central -> comm-beta merge & version bumps for Tue Sep ***MM*** ***YYYY*** (c-c -> ***VER*** / c-b -> ***VER***)
@@ -47,7 +47,7 @@
    >
    > Thanks,
 
-2. Close comm-central in Treestatus
+2. Close `comm-central` in Treestatus
     **Note:** Once we move to git we will need to close the Git main branch rather than comm-central.
 	1. Set **Status** to *Closed*
 	2. Set **Reason Category** to *Merges*
