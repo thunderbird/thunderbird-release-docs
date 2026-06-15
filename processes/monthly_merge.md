@@ -28,7 +28,7 @@
    ### Body
    > Hello!
    >
-   > I'll be completing the Thunderbird comm-central -> comm-beta merge today. The Firefox merges have not completed.
+   > I'll be completing the Thunderbird comm-central -> comm-beta merge today.
    >
    >   comm-central to ***VER***
    >   comm-beta to ***VER***
