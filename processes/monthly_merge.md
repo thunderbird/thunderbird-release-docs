@@ -47,8 +47,7 @@
    >
    > Thanks,
 
-2. Close `comm-central` in Treestatus
-    **Note:** Once we move to git we will need to close the Git main branch rather than comm-central.
+2. Close `thunderbird-desktop-main` in [Treestatus](https://lando.moz.tools/treestatus/)
 	1. Set **Status** to *Closed*
 	2. Set **Reason Category** to *Merges*
 	3. Set **Reason** to "Closed for comm-central to comm-beta merge"
