@@ -153,8 +153,7 @@
    >
    > Thanks,
  
-2. Close comm-beta in Treestatus
-    **Note:** Once we move to git we will need to close the Git beta branch rather than comm-beta.
+2. Close `thunderbird-desktop-beta` in [Treestatus](https://lando.moz.tools/treestatus/)
 	1. Set **Status** to *Closed*
 	2. Set **Reason Category** to *Merges*
 	3. Set **Reason** to "Closed for comm-beta to comm-release merge"
