@@ -96,7 +96,9 @@
    1. `comm-central` to OPEN
    2. `comm-beta` to APPROVAL REQUIRED
 
-11. Reply to your previous email using the template below:
+11. Inform Sheriffs on the [Thunderbird CI](https://matrix.to/#/#thunderbird-ci:mozilla.org) Matrix room that the tree is now open again.
+
+12. Reply to your previous email using the template below:
 
    > Merges are finished.
    >
