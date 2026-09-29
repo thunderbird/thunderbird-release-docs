@@ -1,1 +1,1 @@
-# thunderbird-release-docs
+# Thunderbird Release Docs
