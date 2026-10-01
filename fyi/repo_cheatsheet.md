@@ -1,77 +1,107 @@
-## Local Mozilla checkout cheatsheet
+# Local Mozilla checkout cheatsheet
 
 ...in no particular order. There are a million things to know/learn with Mozilla
 repo tooling, but the features and tricks covered in this cheatsheet are used
 fairly frequently.
 
-**Discard unwanted staged changes**
+## Discard unwanted changes
 
-1. `hg revert -C <filename>`
+Discard both staged and unstaged changes to a file:
 
-- **...or for interactive mode**
+```sh
+git restore --staged --worktree <filename>
+```
 
-  `hg revert -C -i`
+...or pick which changes to discard, interactively:
 
-**Rebase a patch to the tip of comm-central**
+```sh
+git restore -p <filename>
+```
 
-1. `moz-phab patch <phabricator ID>`
-2. `hg rebase -s tip -d comm`
-3. `moz-phab`
+## Rebase a patch to the tip of comm-central
 
-**Submit patch to existing Phabricator revision**
+```sh
+moz-phab patch <phabricator ID>
+git fetch origin
+git rebase origin/main
+moz-phab
+```
 
-1. `hg metaedit`
-2. Add revision URL to extended commit message
+## Submit a patch to an existing Phabricator revision
 
-   ```less
+1. Run `git commit --amend`.
+2. Add the revision URL to the extended commit message:
+
+   ```text
    Differential Revision: https://phabricator.services.mozilla.com/<phabricator ID>
    ```
 
-**Manually porting incompatible patch to repo**
+## Manually port an incompatible patch to the repo
 
-1. Make changes to repo
-2. `hg addremove`
-3. Commit with message from top of patch file
-4. *Make sure to credit the original patch author!*
+1. Make the changes to the repo.
+2. Stage everything, including new and deleted files:
 
-	```bash
-	hg commit --amend --user 'Bender Rodríguez <imfortypercent@proton.me>'
-    ```
+   ```sh
+   git add -A
+   ```
 
-**Amending a changeset**
+3. Commit with the message from the top of the patch file.
+4. _Make sure to credit the original patch author!_
 
-1. `hg up <changeset hash>`
-2. Make changes
-3. `hg amend`
-4. `moz-phab`
+   ```sh
+   git commit --amend --author 'Bender Rodríguez <imfortypercent@proton.me>'
+   ```
 
-**Lint and fix changes**
+## Amend a commit
 
-```bash
+For the most recent commit:
+
+1. Make the changes.
+2. Run `git commit --amend -a`.
+3. Run `moz-phab`.
+
+For an older commit:
+
+1. Make the changes.
+2. Commit them as a fixup, then fold it into the original commit:
+
+   ```sh
+   git commit -a --fixup <commit hash>
+   git rebase -i --autosquash <commit hash>~
+   ```
+
+3. Run `moz-phab`.
+
+## Lint and fix changes
+
+```sh
 ./mach commlint --fix -n <list of files>
 ```
 
-**Backing out a changeset**
+## Back out a commit
 
-```bash
-hg backout <revision> -m "Backed out changeset <revision> (bug <bug #>) rs=backout a=<your username>"
+```sh
+git revert --no-commit <commit hash>
+git commit -m "Backed out changeset <commit hash> (bug <bug #>) rs=backout a=<your username>"
 ```
 
-**Pushing a bustage fix**
+## Push a bustage fix
 
-```bash
-hg commit -m "No bug - <explanation> rs=bustage-fix a=<your username>"
+```sh
+git commit -m "No bug - <explanation> rs=bustage-fix a=<your username>"
 ```
 
-**Generating optimized taskgraph**
+## Generate an optimized taskgraph
 
-```bash
+```sh
 ./mach taskgraph optimized -v -p project=comm-central --root=comm/taskcluster
 ```
 
-**Useful Mercurial commands to know**
+## Useful git commands to know
 
-- `hg amend`
-- `hg histedit`
-- `hg purge`
-- `hg oops`
+| Command              | What it does                                              | Mercurial equivalent |
+| -------------------- | --------------------------------------------------------- | -------------------- |
+| `git commit --amend` | Change the most recent commit                             | `hg amend`           |
+| `git rebase -i`      | Reorder, edit, squash or drop commits                     | `hg histedit`        |
+| `git clean -fd`      | Delete untracked files (use `-n` first for a dry run)     | `hg purge`           |
+| `git reflog`         | Find earlier states of a branch, to recover from mistakes | `hg oops`            |

@@ -1,0 +1,55 @@
+# Sidebar navigation. When adding a new doc, add an entry here.
+# Links are relative to the site root; a doc `foo/bar.md` is published as
+# `foo/bar.html`, and a directory's README.md as `foo/`.
+
+- title: Release Processes
+  url: processes/
+  pages:
+    - title: Desktop releases
+      url: processes/releases/desktop.html
+    - title: Desktop nightly releases
+      url: processes/releases/nightly/desktop.md
+    - title: Desktop smoke test
+      url: processes/releases/testing/smoke_test.md
+    - title: Android releases
+      url: processes/releases/android.md
+    - title: Yearly ESR setup
+      url: processes/releases/yearly_esr.md
+    - title: Monthly merges
+      url: processes/monthly_merge.md
+    - title: Localization (l10n)
+      url: processes/l10n.md
+    - title: Flathub
+      url: processes/flathub.md
+
+- title: DIY Guides
+  url: diy/
+  pages:
+    - title: Manually run release promotion
+      url: diy/release_promotion.md
+    - title: Cross compile Linux aarch64
+      url: diy/cross_compile_linux_aarch64.md
+    - title: Cross compile Windows x86_64
+      url: diy/cross_compile_windows.md
+    - title: Manually vendor a Rust crate
+      url: diy/manually_vendor_rust.md
+    - title: Manually sync a Rust dependency
+      url: diy/rust_sync.md
+    - title: Inspect a Taskcluster docker container
+      url: diy/taskcluster_docker_local.md
+
+- title: For Your Information
+  url: fyi/
+  pages:
+    - title: Local Mozilla checkout cheatsheet
+      url: fyi/repo_cheatsheet.md
+    - title: Bulk actions on Taskcluster
+      url: fyi/batch_retry_tc_jobs.md
+    - title: Language packs
+      url: fyi/language_packs.md
+    - title: Automating Microsoft Store uploads
+      url: fyi/automate_ms_store_uploads.md
+    - title: Android GitHub environment
+      url: fyi/android_gh_env.md
+    - title: Prefer a comm/third_party Python module
+      url: fyi/prioritize_comm_syspath.md

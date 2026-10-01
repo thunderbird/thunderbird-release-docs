@@ -5,8 +5,8 @@
 ### Script (by John Bieling)
 
 A script is available to check langpacks for a specific version:
-https://gist.github.com/coreycb/8a983c113d0808de032af79ead8b3ef8
-(forked from John's gist with cache fix)
+https://gist.github.com/coreycb/8a983c113d0808de032af79ead8b3ef8 (forked from
+John's gist with cache fix)
 
 Example usage:
 
@@ -14,19 +14,26 @@ Example usage:
 node check_lang.mjs --version 150.0 --default-only
 ```
 
-Note: Running this script after re-pushing langpacks seems to hit a caching issue where the old version continues to be displayed, however checking the website shows the updated langpack version.
+Note: Running this script after re-pushing langpacks seems to hit a caching
+issue where the old version continues to be displayed, however checking the
+website shows the updated langpack version.
 
 ### Checking ATN Directly
 
-You can also check [ATN](https://addons.thunderbird.net/en-US/thunderbird/addon/tb-langpack-be/versions/) directly to verify whether a langpack is up-to-date.
+You can also check
+[ATN](https://addons.thunderbird.net/en-US/thunderbird/addon/tb-langpack-be/versions/)
+directly to verify whether a langpack is up-to-date.
 
 ## Known Issues
 
-As of this writing, our push langpack tasks run successfully, but ATN sometimes fails to publish some langpacks. Until we can automate the verification, manually check that all langpacks were published after each release.
+As of this writing, our push langpack tasks run successfully, but ATN sometimes
+fails to publish some langpacks. Until we can automate the verification,
+manually check that all langpacks were published after each release.
 
 ## Re-running a Langpack Task
 
-If a langpack task needs to be re-run, you have to "Add new jobs" in Treeherder and specify the job(s), for example:
+If a langpack task needs to be re-run, you have to "Add new jobs" in Treeherder
+and specify the job(s), for example:
 
 ```
 push-langpacks-shippable-l10n-linux64-shippable-2/opt

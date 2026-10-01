@@ -1,51 +1,66 @@
-Uplifts prepared -- (Corey)
+# Desktop releases
 
-Build day before: 
-- Check out comm-beta or update to tip
-```
-hg pull <comm repo>
-hg up tip
-```
-- Pin to Firefox
+Uplifts are approved by Corey.
 
-```
-pin_for_release.py <mozilla repo>
+## The day before the build
+
+### Update the branch
+
+Check out the branch for the release and update it to tip:
+
+```sh
+git pull origin <branch>
 ```
 
-- Check For rust vendoring
+### Pin to Firefox
+
+1. Put our
+   [pin.sh](https://github.com/thunderbird/thunderbird-release-tools/blob/main/releases/scripts/pin.sh)
+   script in your `comm` checkout and run it.
+2. It updates `.gecko_rev.yml` and creates a commit. Check the commit to see
+   which Firefox tag or hash it pinned to.
+3. In the source directory (`gecko`), check out that tag or hash:
+
+   ```sh
+   git checkout <tag/hash>
+   ```
+
+### Re-vendor Rust (if needed)
+
+Check whether Rust needs to be re-vendored:
+
 ```sh
 ./mach tb-rust check-upstream
 ```
-- If neccessary, vendor
+
+If it does, re-vendor and commit:
+
 ```sh
-./mach tb-rust sync
 ./mach tb-rust vendor
+git commit -m "No Bug - Vendored Rust from firefox-<branch>. r=release r+a=ebaginski"
 ```
-- If you vendored rust, commit the change
+
+### Uplift patches
+
+1. Put our
+   [uplift.sh](https://github.com/thunderbird/thunderbird-release-tools/blob/main/releases/scripts/uplift.sh)
+   script in your `comm` checkout.
+2. Uplift each patch and check the commit it creates:
+
+   ```sh
+   ./uplift.sh coreycb <hash>
+   git log -n 1
+   ```
+
+### Push the uplifts
+
 ```sh
-hg commit -m "No Bug - Vendored Rust from <mozilla-repo>. r=release r+a=sking"
-```
-- Uplift bugs
-
-```
-graft_uplift.sh coreycb <commit hash from c-c>
+lando push-commits --lando-repo thunderbird-desktop-<branch>
 ```
 
-- Verify recent additions
+Once the changes land, use [Bugherder](https://bugherder.mozilla.org) to update
+the corresponding bugs.
 
-```
-hg out -r . <comm repo>
-```
+## Ship it
 
-
-- Push those changes to the appropriate comm repo
-
-```
-hg push -r . <comm repo>
-```
-
-- Follow up using Bugherder (must use full [https://hg.mozilla](https://hg.mozilla) URL)
-
-Ship-it
-
-•  Promote using hash of latest commit
+Promote the release using the hash of the latest commit.

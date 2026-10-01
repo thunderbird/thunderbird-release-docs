@@ -1,205 +1,212 @@
 # Monthly merges
 
-## Things to Know Beforehand
+- [Running a custom push action](#running-a-custom-push-action)
+- [main to beta merge](#main-to-beta-merge)
+- [beta to release merge](#beta-to-release-merge)
 
-### How to run actions on Treeherder
+## Running a custom push action
 
-1. Find the push you want to run an action on
-2. Click the arrow in the top right corner of the push
-3. Select *Custom Push Action...* from the drop-down menu
+The merges are done with the `merge-automation` custom push action on
+Treeherder. To run it:
 
+1. Find the push you want to run the action on.
+2. Click the arrow in the top right corner of the push.
+3. Select **Custom Push Action** from the drop-down menu.
 
-## High-level timeline
+## main to beta merge
 
-1. Run dry runs a week out
-2. Perform `comm-beta` -> `comm-release` merge
-3. Perform `comm-central` -> `comm-beta` merge
+1. Email `thunderbird-drivers` that the merge is beginning, using the template
+   below. Replace the `<PLACEHOLDERS>`.
 
+   **Subject:**
 
-***
+   ```text
+   Thunderbird main -> beta merge & version bumps for <DATE> (main -> <VERSION> / beta -> <VERSION>)
+   ```
 
-## `comm-central` -> `comm-beta` merge
+   **Body:**
 
-1. Email `thunderbird-drivers` that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
+   ```text
+   Hello!
 
-   ### Subject
-   > Thunderbird comm-central -> comm-beta merge & version bumps for Tue Sep ***MM*** ***YYYY*** (c-c -> ***VER*** / c-b -> ***VER***)
+   I'll be completing the Thunderbird main -> beta merge today.
 
-   ### Body
-   > Hello!
-   >
-   > I'll be completing the Thunderbird comm-central -> comm-beta merge today.
-   >
-   >   comm-central to ***VER***
-   >   comm-beta to ***VER***
-   >
-   > The merge will be performed via automation.
-   >
-   > I’ll keep people up to date by replying to this email:
-   >
-   >   - Email before merge begins
-   >   - Close the trees
-   >   - Perform the merge
-   >   - Email after the merge
-   >   - Re-open comm-central, set comm-beta to approval needed
-   >
-   > Please let me know if you have any questions or comments.
-   >
-   > Thanks,
+   main to <VERSION>, beta to <VERSION>
 
-2. Close `thunderbird-desktop-main` in [Treestatus](https://lando.moz.tools/treestatus/)
-	1. Set **Status** to *Closed*
-	2. Set **Reason Category** to *Merges*
-	3. Set **Reason** to "Closed for comm-central to comm-beta merge"
+   The merge will be performed via automation.
 
-3. Check if Rust needs to be re-vendored on `comm-beta` using `mach tb-rust check-upstream`
-	* If it does, make sure to re-vendor using `mach tb-rust vendor` then push
+   I'll keep people up to date by replying to this email:
 
-4. Run a dry run of the `merge-automation` custom push action using the payload below:
+   - Email before merge begins
+   - Close the trees
+   - Perform the merge
+   - Email after the merge
+   - Re-open main
 
-	```
-	force-dry-run: true
-	behavior: main-to-beta
-	```
+   Please let me know if you have any questions or comments.
 
-5. Verify the diff artifact looks correct
+   Thanks,
+   ```
 
-6. If everything is in order, rerun the previous custom push action, but with `force-dry-run` set to "false"
+2. Close `thunderbird-desktop-main` in
+   [Treestatus](https://lando.moz.tools/treestatus/):
+   1. Set **Status** to _Closed_.
+   2. Set **Reason Category** to _Merges_.
+   3. Set **Reason** to "Closed for main to beta merge".
 
-   *Upon a successful run, `comm-beta` should get a version bump, branding changes, and two new tags:*
+3. Check if Rust needs to be re-vendored on `beta` with
+   `mach tb-rust check-upstream`. If it does, re-vendor with
+   `mach tb-rust vendor`, then push.
 
-   * *BETA\_**[PREVIOUS VERSION]**\_END*
-   * *BETA\_**[NEW VERSION]**\_BASE*
+4. Do a dry run of the `merge-automation`
+   [custom push action](#running-a-custom-push-action) with this payload:
 
-   *However, .gecko_rev.yml is still not pinned to the correct tag/revision. This should be done during the next beta release.*
+   ```yaml
+   force-dry-run: true
+   behavior: main-to-beta
+   ```
 
-   *`comm-central` should also get a new tag:*
+5. Verify that the diff artifact looks correct.
 
-   * *BETA\_**[NEW VERSION]**\_BASE*
+6. If everything is in order, run the action again with `force-dry-run` set to
+   `false`.
 
-7. Open the tip revision on comm-beta and verify that `mail/locales/l10n-changesets.json` has revisions
+   On success, `beta` gets a version bump, branding changes, and two new tags:
 
-8. Run a dry run of the `merge-automation` custom push action using the payload below:
+   - `BETA_<PREVIOUS_VERSION>_END`
+   - `BETA_<NEW_VERSION>_BASE`
 
-	```
-	force-dry-run: true
-	behavior: bump-main
-	```
+   `main` also gets a new tag:
 
-9. If everything is in order, rerun the previous custom push action, but with `force-dry-run` set to "false"
+   - `BETA_<NEW_VERSION>_BASE`
 
-   *Upon a successful run, `comm-central` should get a version bump and a new tag:*
+   > [!NOTE] `.gecko_rev.yml` is still not pinned to the correct tag/revision.
+   > This is done during the next beta release.
 
-   * *NIGHTLY\_**[PREVIOUS VERSION]**\_END*
+7. Open the tip revision on `comm-beta` and verify that
+   `mail/locales/l10n-changesets.json` has revisions.
 
-10. Restore trees in Treestatus
-   1. `comm-central` to OPEN
-   2. `comm-beta` to APPROVAL REQUIRED
+8. Do a dry run of the `merge-automation` custom push action with this payload:
 
-11. Inform Sheriffs on the [Thunderbird CI](https://matrix.to/#/#thunderbird-ci:mozilla.org) Matrix room that the tree is now open again.
+   ```yaml
+   force-dry-run: true
+   behavior: bump-main
+   ```
 
-12. Reply to your previous email using the template below:
+9. If everything is in order, run the action again with `force-dry-run` set to
+   `false`. On success, `main` gets a version bump and a new tag:
 
-   > Merges are finished.
-   >
-   > Thunderbird ***VER*** will be built once the Firefox build has been tagged in Mercurial.
-   >
-   > comm-central:
-   >
-   > * ***TREEHERDER LINK TO VERSION BUMP REVISION***
-   > * ***TREEHERDER LINK TO MERGE REVISION***
-   >
-   > comm-beta:
-   >
-   > * ***TREEHERDER LINK TO TIP***
-   >
-   > Documentation:
-   >
-   > * No changes
-   >
-   > Current tree status:
-   >
-   > * comm-central: OPEN
-   > * comm-beta: APPROVAL REQUIRED
+   - `NIGHTLY_<PREVIOUS_VERSION>_END`
 
+10. Restore the trees in Treestatus:
+    1. `main` to _Open_.
 
-***
+11. Tell the sheriffs in the
+    [Thunderbird CI](https://matrix.to/#/#thunderbird-ci:mozilla.org) Matrix
+    room that the tree is open again.
 
-## `comm-beta` -> `comm-release` merge
+12. Reply to your first email using this template:
 
-1. Email thunderbird-drivers mailing list that the merge is beginning using the template below, making sure to replace the bolded + italicized placeholders appropriately:
+    ```text
+    The merge is complete.
 
-   ### Subject
-   > Thunderbird comm-beta -> comm-release merge & version bump for Tue Sep ***MM*** ***YYYY*** ( c-r -> ***VER***)
+    main:
 
-   ### Body
-   > Hello!
-   >
-   > I'll be completing the Thunderbird comm-beta -> comm-release merge today. The Firefox merges have not completed.
-   >
-   >   - comm-release to ***VER***
-   >
-   > The merge will be performed via automation.
-   >
-   > I’ll keep people up to date by replying to this email:
-   >
-   >   - Email before merge begins
-   >   - Close the trees
-   >   - Perform the merge
-   >   - Email after the merge
-   >   - comm-beta will remain closed until next week's comm-central -> comm-beta merge
-   >
-   > Please let me know if you have any questions or comments.
-   >
-   > Thanks,
- 
-2. Close `thunderbird-desktop-beta` in [Treestatus](https://lando.moz.tools/treestatus/)
-	1. Set **Status** to *Closed*
-	2. Set **Reason Category** to *Merges*
-	3. Set **Reason** to "Closed for comm-beta to comm-release merge"
+    - <TREEHERDER LINK TO VERSION BUMP REVISION>
+    - <TREEHERDER LINK TO CHANGE TAGGED WITH NIGHTLY_*_END TAG>
 
-3. Check if Rust needs to be re-vendored on `comm-release` using `mach tb-rust check-upstream`
-	* If it does, make sure to re-vendor using `mach tb-rust vendor` then push
+    beta:
 
-4. Run a dry run of the `merge-automation` custom push action using the payload below:
-	
-	```
-	force-dry-run: true
-	behavior: beta-to-release
-	```
+    - <TREEHERDER LINK TO TIP AFTER MERGE AND CONFIG UPDATE>
 
-5. Verify the diff artifact looks correct
+    Current tree status:
 
-6. If everything is in order, rerun the previous custom push action, but with `force-dry-run` set to "false"
+    - main: OPEN
+    - beta: APPROVAL REQUIRED
+    ```
 
-   *Upon a successful run, `comm-release` should get a version bump, branding changes, and two new tags:*
+## beta to release merge
 
-   * *RELEASE\_**[PREVIOUS VERSION]**\_END*
-   * *RELEASE\_**[NEW VERSION]**\_BASE*
+1. Email `thunderbird-drivers` that the merge is beginning, using the template
+   below. Replace the `<PLACEHOLDERS>`.
 
-   *`comm-beta` should also get a new tag:*
+   **Subject:**
 
-   * *RELEASE\_**[NEW VERSION]**\_BASE*
+   ```text
+   Thunderbird beta -> release merge & version bump for <DATE> (release -> <RELEASE_VER>)
+   ```
 
-7. Reply to your previous email using the template below:
+   **Body:**
 
-   > Merges are finished.
-   >
-   > Thunderbird ***VER*** will be built once the Firefox build has been tagged in Mercurial.
-   >
-   > comm-beta:
-   >
-   > * ***TREEHERDER LINK TO TIP***
-   >
-   > comm-release:
-   >
-   > * ***TREEHERDER LINK TO TIP***
-   >
-   > Documentation:
-   >
-   > * No changes
-   >
-   > Current tree status:
-   >
-   > * comm-release: APPROVAL REQUIRED
-   > * comm-beta: CLOSED
+   ```text
+   Hello!
+
+   I'll be completing the Thunderbird beta -> release merge today.
+
+   - elease to <RELEASE_VER>
+
+   The merge will be performed via automation.
+
+   I'll keep people up to date by replying to this email:
+
+   - Email before merge begins
+   - Close the trees
+   - Perform the merge
+   - Email after the merge
+
+   Please let me know if you have any questions or comments.
+
+   Thanks,
+   ```
+
+2. Close `thunderbird-desktop-beta` in
+   [Treestatus](https://lando.moz.tools/treestatus/):
+   1. Set **Status** to _Closed_.
+   2. Set **Reason Category** to _Merges_.
+   3. Set **Reason** to "Closed for beta to release merge".
+
+3. Check if Rust needs to be re-vendored on `release` with
+   `mach tb-rust check-upstream`. If it does, re-vendor with
+   `mach tb-rust vendor`, then push.
+
+4. Do a dry run of the `merge-automation`
+   [custom push action](#running-a-custom-push-action) with this payload:
+
+   ```yaml
+   force-dry-run: true
+   behavior: beta-to-release
+   ```
+
+5. Verify that the diff artifact looks correct.
+
+6. If everything is in order, run the action again with `force-dry-run` set to
+   `false`.
+
+   On success, `release` gets a version bump, branding changes, and two new
+   tags:
+
+   - `RELEASE_<PREVIOUS_VERSION>_END`
+   - `RELEASE_<NEW_VERSION>_BASE`
+
+   `beta` also gets a new tag:
+
+   - `RELEASE_<NEW_VERSION>_BASE`
+
+7. Reply to your first email using this template:
+
+   ```text
+   The merge is complete.
+
+   comm-beta:
+
+   - <TREEHERDER LINK TO TIP>
+
+   comm-release:
+
+   - <TREEHERDER LINK TO TIP>
+
+   Current tree status:
+
+   - release: APPROVAL REQUIRED
+   - beta: CLOSED
+   ```
