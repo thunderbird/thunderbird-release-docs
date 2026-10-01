@@ -6,7 +6,7 @@
   url: processes/
   pages:
     - title: Desktop releases
-      url: processes/releases/desktop.html
+      url: processes/releases/desktop.md
     - title: Desktop nightly releases
       url: processes/releases/nightly/desktop.md
     - title: Desktop smoke test
