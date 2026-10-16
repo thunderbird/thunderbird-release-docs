@@ -135,6 +135,12 @@ Once the ESR rule that updates users from the old ESR To the new ESR has
 background rate of 100, the second new ESR rule (e.g. `>=140.0 <141.0`) is no
 longer needed and can be deleted.
 
+## Localization Enablement
+
+- Update thunderbird-l10n-source's .github/update-config.json branches to
+  include the new esr branch.
+- Old branches will also need to be removed once they are EOL.
+
 ## Updating Thunderbird taskgraph
 
 Search all files in `taskcluster/` folder for references to previous ESR, such
