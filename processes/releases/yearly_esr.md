@@ -114,10 +114,26 @@ should be performed on Balrog staging _and_ production.
 
 ### `esr` channel
 
-1. Update version cutoff for current ESR to be less than or equal to the current
-   ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<=128.12.0`)
+1. Update version cutoff for current ESR to be less than the current
+   ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<128.12.0`)
    - This allows current ESR users to update to the new ESR
 2. Set background rate to pre-determined rate
+3. Create a second new ESR rule for users who are already on the new ESR by
+   duplicating the new ESR rule and making the following updates:
+   - Update Mapping and Fallback Mapping to the initial release version for the
+     new ESR (e.g. Thunderbird-140.0esr-build1)
+   - Update version cutoff to only match the new ESR (e.g. `>=140.0 <141.0`)
+   - Set background rate to zero for now. This will be updated for versions
+     after the initial release version.
+   - Increase priority by 1 from the new ESR rule, so that it is matched first
+   - Add Comment (e.g. "esr140 rule - 140esr updates only)
+   - This rule ensures that users who have already updated to the new ESR keep
+     receiving security updates while the background rate for the rule that
+     updates users from the old ESR to the new ESR is slowly increased.
+
+Once the ESR rule that updates users from the old ESR To the new ESR has
+background rate of 100, the second new ESR rule (e.g. `>=140.0 <141.0`) is no
+longer needed and can be deleted.
 
 ## Updating Thunderbird taskgraph
 
