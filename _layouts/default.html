@@ -14,7 +14,12 @@
       <img src="{{ site.baseurl }}/assets/images/logo.png" alt="" width="32" height="32">
       Thunderbird Release Docs
     </a>
-    <a class="repo" href="https://github.com/thunderbird/thunderbird-release-docs">GitHub</a>
+    <div class="search">
+      <input id="search-input" type="search" placeholder="Search docs"
+             autocomplete="off" aria-label="Search docs">
+      <ul id="search-results"></ul>
+    </div>
+    <a class="repo"href="https://github.com/thunderbird/thunderbird-release-docs">GitHub</a>
   </header>
 
   <div class="container">
@@ -57,6 +62,19 @@
       title.textContent = type[0].toUpperCase() + type.slice(1);
       quote.prepend(title);
     }
+  </script>
+
+  <script src="https://unpkg.com/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script>
+  <script>
+    // Search box, backed by the index generated from search.json.
+    SimpleJekyllSearch({
+      searchInput: document.getElementById("search-input"),
+      resultsContainer: document.getElementById("search-results"),
+      json: "{{ site.baseurl }}/search.json",
+      searchResultTemplate: '<li><a href="{url}">{title}<span class="path">{path}</span></a></li>',
+      noResultsText: '<li class="empty">No results</li>',
+      limit: 10,
+    });
   </script>
 </body>
 </html>

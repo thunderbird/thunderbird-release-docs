@@ -48,6 +48,47 @@ a:hover { text-decoration: underline; }
   font-size: 1.1rem;
 }
 
+.search {
+  position: relative;
+  flex: 0 1 400px;
+  margin: 0 1.5rem;
+}
+.search input {
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+}
+.search input::placeholder { color: rgba(255, 255, 255, 0.6); }
+.search ul {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+.search ul:empty { display: none; }
+.search li a {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  color: var(--fg);
+}
+.search li a:hover { background: var(--bg-alt); text-decoration: none; }
+.search .path { display: block; font-size: 0.75rem; color: var(--muted); }
+.search .empty { padding: 0.4rem 0.75rem; color: var(--muted); }
+
 .container {
   display: flex;
   max-width: 1280px;
