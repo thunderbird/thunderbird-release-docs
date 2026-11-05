@@ -114,8 +114,8 @@ should be performed on Balrog staging _and_ production.
 
 ### `esr` channel
 
-1. Update version cutoff for current ESR to be less than the current
-   ESR version (e.g. for Thunderbird-128.12.0esr-build1, set it to `<128.12.0`)
+1. Update version cutoff for current ESR to be less than the current ESR version
+   (e.g. for Thunderbird-128.12.0esr-build1, set it to `<128.12.0`)
    - This allows current ESR users to update to the new ESR
 2. Set background rate to pre-determined rate
 3. Create a second new ESR rule for users who are already on the new ESR by

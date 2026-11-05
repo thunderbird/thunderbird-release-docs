@@ -8,8 +8,8 @@ Processes, guides, notes and reports for Thunderbird release engineering.
   automated.
 - [For Your Information](fyi/) — build system and release process
   idiosyncrasies, plus everyday tips.
-- [Reports](reports/) — generated from release data and rebuilt daily, e.g.
-  how often releases ship on schedule.
+- [Reports](reports/) — generated from release data and rebuilt daily, e.g. how
+  often releases ship on schedule.
 
 ## Adding a doc
 
