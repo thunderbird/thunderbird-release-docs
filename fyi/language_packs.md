@@ -2,21 +2,21 @@
 
 ## Checking Langpack Status
 
-### Script (by John Bieling)
+### tb-release check-langpacks
 
-A script is available to check langpacks for a specific version:
-https://gist.github.com/coreycb/8a983c113d0808de032af79ead8b3ef8 (forked from
-John's gist with cache fix)
+`tb-release check-langpacks`, from
+[thunderbird-release-tools](https://github.com/thunderbird/thunderbird-release-tools/tree/main/releases/atn),
+checks the brand name and upload date of the langpack ATN offers by default
+for a Thunderbird version, for each locale. It was ported from a script by
+John Bieling. See the
+[thunderbird-release-tools README](https://github.com/thunderbird/thunderbird-release-tools#tb-release)
+to install `tb-release`.
 
 Example usage:
 
 ```
-node check_lang.mjs --version 150.0 --default-only
+tb-release check-langpacks --version 150
 ```
-
-Note: Running this script after re-pushing langpacks seems to hit a caching
-issue where the old version continues to be displayed, however checking the
-website shows the updated langpack version.
 
 ### Checking ATN Directly
 
