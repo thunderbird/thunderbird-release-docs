@@ -32,6 +32,11 @@ jobs:
       run: >-
         uvx --from git+https://github.com/thunderbird/thunderbird-release-tools
         tb-release on-schedule --jekyll --start-date 2026-01-01 --missing
+    - name: Generate Bugzilla queries report
+      working-directory: reports
+      run: >-
+        uvx --from git+https://github.com/thunderbird/thunderbird-release-tools
+        tb-release bugzilla-queries --jekyll
     - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
     - uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697  # v1.0.13
     - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0

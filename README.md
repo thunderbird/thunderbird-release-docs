@@ -42,4 +42,6 @@ a local preview, generate them first (requires
 cd reports
 uvx --from git+https://github.com/thunderbird/thunderbird-release-tools \
     tb-release on-schedule --jekyll
+uvx --from git+https://github.com/thunderbird/thunderbird-release-tools \
+    tb-release bugzilla-queries --jekyll
 ```

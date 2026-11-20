@@ -61,3 +61,5 @@
   pages:
     - title: Releases shipped on schedule
       url: reports/on-schedule.html
+    - title: Bugzilla queries
+      url: reports/bugzilla-queries.html
